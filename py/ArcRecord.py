@@ -11,7 +11,7 @@ class ArcRecord():
     payload = None
 
     def __init__(self, bytes=''):
-        # http://www.danieldrezner.com/ 63.247.129.166 20080103193531 text/html 6518
+        # Ex: http://www.danieldrezner.com/ 63.247.129.166 20080103193531 text/html 6518
         arcline, sep, payload = bytes.partition('\n')
 
         keys1 = ['url', 'ip-address', 'date', 'content-type', 'length' ]
