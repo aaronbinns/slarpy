@@ -5,6 +5,7 @@ import StringIO
 import re
 import sys
 import unicodedata
+import subprocess
 from datetime import datetime
 from urllib2  import Request
 from urllib2  import urlopen
@@ -15,10 +16,11 @@ from lxml import etree
 import superdec
 import sniffer
 from gunzip       import gunzip
-from ArcRecord    import ArcRecord
+from WarcRecord   import WarcRecord
 from HttpResponse import HttpResponse
 from Html         import Html
 from DefaultTransformer import DefaultTransformer
+import MimeType
 
 from optparse import OptionParser
 
@@ -45,13 +47,13 @@ elif len(args) != 2:
 
 # Unzip the record at the given file and offset.
 bytes = []
-arcfile = args[0]
+warcfile = args[0]
 offset  = int(args[1])
 
 if offset < 0:
     parser.error('offset cannot be negative: ' + offset)
 
-url=urlsplit( arcfile )
+url=urlsplit( warcfile )
 protocol=url[0]
 
 if protocol not in ['', 'file', 'http', 'https' ]:
@@ -106,12 +108,19 @@ try:
     finally:
         file.close()
 
-    arc = ArcRecord( bytes )
+    warc = WarcRecord( bytes )
 
-    if not isinstance( arc.payload, HttpResponse ):
-        raise Exception, 'ArcRecord is not an HTTP response'
+    if not isinstance( warc.block, HttpResponse ):
+        raise Exception, 'WARC record is not an HTTP response'
 
-    html=Html( arc.payload.body, arc.payload.charset )
+    # TODO: Check file-type
+    if warc.block.type != 'text/html':
+        # TODO: call Unix 'file' command
+        #print 'TODO: call Unix "file" command: ' + warc.block.type
+        MimeType.getMimeType( warc.block.body )
+        exit(2)
+
+    html=Html( warc.block.body, warc.block.charset )
 
     if not html.doc or html.doc.getroot() is None:
         raise Exception, 'Error parsing HTML'
