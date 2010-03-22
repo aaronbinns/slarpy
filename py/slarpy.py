@@ -15,12 +15,12 @@ from lxml import etree
 # my modules
 import superdec
 import sniffer
+import magic
 from gunzip       import gunzip
 from WarcRecord   import WarcRecord
 from HttpResponse import HttpResponse
 from Html         import Html
 from DefaultTransformer import DefaultTransformer
-import MimeType
 
 from optparse import OptionParser
 
