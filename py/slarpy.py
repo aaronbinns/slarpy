@@ -115,9 +115,7 @@ try:
 
     # TODO: Check file-type
     if warc.block.type != 'text/html':
-        # TODO: call Unix 'file' command
-        #print 'TODO: call Unix "file" command: ' + warc.block.type
-        MimeType.getMimeType( warc.block.body )
+        print magic.from_buffer( warc.block.body )
         exit(2)
 
     html=Html( warc.block.body, warc.block.charset )
