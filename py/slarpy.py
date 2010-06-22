@@ -15,7 +15,7 @@ from lxml import etree
 # my modules
 import superdec
 import sniffer
-import magic
+from magic import Magic
 from gunzip       import gunzip
 from WarcRecord   import WarcRecord
 from HttpResponse import HttpResponse
@@ -115,6 +115,8 @@ try:
 
     # TODO: Check file-type
     if warc.block.type != 'text/html':
+        # Pass 'True' to get Mime-types rather than descriptive names.
+        magic = Magic(True)
         print magic.from_buffer( warc.block.body )
         exit(2)
 
