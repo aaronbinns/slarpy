@@ -85,7 +85,7 @@ class WarcRecord():
         
         match = re.match( '([A-Za-z]+):', headers['url'] )
         if match:
-            scheme = match.groups()
+            scheme = match.groups()[0]
             self.headers['Content-Type'] = schemes.get( scheme, 'application/octet-stream' )
 
         # How can we convert to payload digest if we don't know the format of the ARC checksum?
